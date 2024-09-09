@@ -1,0 +1,76 @@
+ort:
+  enableRepositoryPackageConfigurations: true
+  enableRepositoryPackageCurations: true
+
+  # Force overwriting of any existing output files.
+  forceOverwrite: true
+
+  licenseFilePatterns:
+    licenseFilenames: ['license*']
+    patentFilenames: ['patents']
+    rootLicenseFilenames: ['readme*']
+
+  # Package configurations have to be unique by ID and provenance. Ensure that different providers do not provide
+  # configurations for the same package, see https://github.com/oss-review-toolkit/ort/issues/6972 for details.
+  packageConfigurationProviders:
+  - type: Dir
+    id: PackageConfigurationID
+    options:
+      path: '/User/atenpa6/Downloads/OSS/ort/config/package-configurations/'
+      mustExist: true
+
+  # Package curation providers are listed from highest to lowest priority. Technically, they are applied in reverse
+  # order: The provider with the highest priority is applied last, so it can overwrite any previously applied curations.
+  packageCurationProviders:
+  - type: File
+    id: FileCurationsFile
+    options:
+      path: '/Users/atenpa6/Downloads/OSS/ort/config/curations.yml'
+      mustExist: true
+
+  severeIssueThreshold: ERROR
+  severeRuleViolationThreshold: ERROR
+
+  analyzer:
+    allowDynamicVersions: true
+
+    # A list of enabled package managers.
+    enabledPackageManagers: [Gradle, Maven, NPM]
+
+    # A flag to control whether excluded scopes and paths should be skipped during the analysis.
+    skipExcluded: true
+
+    packageManagers:
+      Gradle:
+        # A list of package manager names that this package manager must run after. For example, this can be used if
+        # another package manager generates files that this package manager requires to run correctly.
+        mustRunAfter: [NPM]
+
+  advisor:
+    # A flag to control whether excluded scopes and paths should be skipped when giving the advice.
+    skipExcluded: false
+
+    config:
+      OSV:
+        options:
+          serverUrl: 'https://api.osv.dev'
+
+  scanner:
+    skipExcluded: true
+
+    ##config:
+      # A map from scanner plugin types to the plugin configuration.
+      ##ScanCode:
+        ##options:
+          # Command line options that affect the ScanCode output.
+          ##commandLine: '--package-types=PACKAGE'
+
+          # Command line options that do not affect the ScanCode output.
+          ##commandLineNonConfig: '--processes 4'
+
+          # Use per-file license findings instead of per-line ones.
+          ##preferFileLicense: false
+
+  reporter:
+
+  notifier:
